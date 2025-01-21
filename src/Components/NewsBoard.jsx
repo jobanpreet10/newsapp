@@ -3,6 +3,7 @@ import NewsItem from "./NewsItem";
 
 const NewsBoard = ({ category }) => {
     const [articles, setArticles] = useState([]);
+    const [isNightMode, setIsNightMode] = useState(true); // State for mode toggle
 
     useEffect(() => {
         const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${import.meta.env.VITE_API_KEY}`;
@@ -11,20 +12,45 @@ const NewsBoard = ({ category }) => {
             .then((data) => setArticles(data.articles));
     }, [category]);
 
+    const toggleMode = () => {
+        setIsNightMode(!isNightMode);
+    };
+
     return (
         <div
             className="text-center"
             style={{
                 marginTop: '80px',
                 padding: '20px',
-                backgroundColor: '#000000', // Black background for the NewsBoard
-                color: 'white', // White text for better contrast
-                minHeight: '100vh', // Ensures the black background covers the screen
+                backgroundColor: isNightMode ? '#000000' : '#ffffff', // Toggle background
+                color: isNightMode ? 'white' : 'black', // Toggle text color
+                minHeight: '100vh',
+                transition: 'background-color 0.5s, color 0.5s', // Smooth transition
             }}
         >
-            <h2>
-                Latest <span className="badge bg-danger">News</span>
-            </h2>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '20px',
+                    marginBottom: '20px',
+                }}
+            >
+                <h2 style={{ margin: 0 }}>
+                    Latest <span className="badge bg-danger">News</span>
+                </h2>
+                <button
+                    className="btn btn-secondary"
+                    onClick={toggleMode}
+                    style={{
+                        height: '40px',
+                        fontSize: '14px',
+                    }}
+                >
+                    {isNightMode ? 'Switch to Light Mode' : 'Switch to Night Mode'}
+                </button>
+            </div>
             <div>
                 {articles.map((news, index) => (
                     <NewsItem
