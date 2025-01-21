@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 
-const NewsBoard = ({category}) => {
+const NewsBoard = ({ category }) => {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,16 @@ const NewsBoard = ({category}) => {
     }, [category]);
 
     return (
-        <div className="text-center" style={{ marginTop: '80px', padding: '20px' }}>
+        <div
+            className="text-center"
+            style={{
+                marginTop: '80px',
+                padding: '20px',
+                backgroundColor: '#000000', // Black background for the NewsBoard
+                color: 'white', // White text for better contrast
+                minHeight: '100vh', // Ensures the black background covers the screen
+            }}
+        >
             <h2>
                 Latest <span className="badge bg-danger">News</span>
             </h2>
