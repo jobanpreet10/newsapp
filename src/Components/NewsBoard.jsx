@@ -6,15 +6,16 @@ const NewsBoard = ({ category }) => {
     const [isNightMode, setIsNightMode] = useState(true); // State for mode toggle
 
     useEffect(() => {
-        const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${import.meta.env.VITE_API_KEY}`;
-        fetch(url)
-            .then((response) => response.json())
-            .then((data) => setArticles(data.articles));
-    }, [category]);
+    const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${import.meta.env.VITE_API_KEY}`;
+    fetch(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0'
+        }
+    })
+        .then((response) => response.json())
+        .then((data) => setArticles(data.articles));
+}, [category]);
 
-    const toggleMode = () => {
-        setIsNightMode(!isNightMode);
-    };
 
     return (
         <div
