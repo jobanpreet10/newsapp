@@ -3,19 +3,27 @@ import NewsItem from "./NewsItem";
 
 const NewsBoard = ({ category }) => {
     const [articles, setArticles] = useState([]);
-    const [isNightMode, setIsNightMode] = useState(true); // State for mode toggle
+    const [isNightMode, setIsNightMode] = useState(true);
 
     useEffect(() => {
-    const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${import.meta.env.VITE_API_KEY}`;
-    fetch(url, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0'
-        }
-    })
-        .then((response) => response.json())
-        .then((data) => setArticles(data.articles));
-}, [category]);
+        const apiKey = import.meta.env.VITE_API_KEY;
+        const originalUrl = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${apiKey}`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(originalUrl)}`;
 
+        fetch(proxyUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                const parsed = JSON.parse(data.contents);
+                setArticles(parsed.articles);
+            })
+            .catch((err) => {
+                console.error("Error fetching news:", err);
+            });
+    }, [category]);
+
+    const toggleMode = () => {
+        setIsNightMode(!isNightMode);
+    };
 
     return (
         <div
@@ -23,10 +31,10 @@ const NewsBoard = ({ category }) => {
             style={{
                 marginTop: '80px',
                 padding: '20px',
-                backgroundColor: isNightMode ? '#000000' : '#ffffff', // Toggle background
-                color: isNightMode ? 'white' : 'black', // Toggle text color
+                backgroundColor: isNightMode ? '#000000' : '#ffffff',
+                color: isNightMode ? 'white' : 'black',
                 minHeight: '100vh',
-                transition: 'background-color 0.5s, color 0.5s', // Smooth transition
+                transition: 'background-color 0.5s, color 0.5s',
             }}
         >
             <div
@@ -44,10 +52,7 @@ const NewsBoard = ({ category }) => {
                 <button
                     className="btn btn-secondary"
                     onClick={toggleMode}
-                    style={{
-                        height: '40px',
-                        fontSize: '14px',
-                    }}
+                    style={{ height: '40px', fontSize: '14px' }}
                 >
                     {isNightMode ? 'Switch to Light Mode' : 'Switch to Night Mode'}
                 </button>
